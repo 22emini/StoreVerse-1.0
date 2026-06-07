@@ -1,0 +1,89 @@
+{
+  "_comment": "Copy these into Postman Body → raw → JSON. Base URL: http://localhost:5000",
+
+  "user_register": {
+    "email": "test@example.com"
+  },
+
+  "user_complete_registration": {
+    "email": "test@example.com",
+    "name": "Jane Doe",
+    "password": "SecurePass123!",
+    "phoneNumber": "+15551234567"
+  },
+
+  "user_login": {
+    "email": "test@example.com",
+    "password": "SecurePass123!"
+  },
+
+  "user_verify_otp": {
+    "email": "test@example.com",
+    "otp": "123456"
+  },
+
+  "user_update_profile": {
+    "name": "Jane Updated",
+    "phoneNumber": "+15559876543"
+  },
+
+  "user_change_password": {
+    "password": "NewSecurePass456!"
+  },
+
+  "store_add": {
+    "userId": 1,
+    "image": "https://example.com/store-logo.png",
+    "storeName": "My Test Store",
+    "category": "Fashion",
+    "businessAddress": "123 Main St, Lagos",
+    "country": "Nigeria",
+    "currency": "NGN",
+    "subDomain": "my-test-store"
+  },
+
+  "store_update": {
+    "storeName": "My Updated Store",
+    "category": "Electronics",
+    "businessAddress": "456 Commerce Ave",
+    "country": "Nigeria",
+    "currency": "NGN",
+    "subDomain": "my-updated-store",
+    "isActive": true,
+    "sslEnabled": false
+  },
+
+  "_product_not_wired_yet": "Product controller exists but routes are not mounted in index.ts",
+
+  "product_add_future": {
+    "storeId": 1,
+    "image": "https://example.com/product.jpg",
+    "name": "Classic T-Shirt",
+    "description": "Cotton crew neck tee",
+    "category": "Apparel",
+    "price": "29.99",
+    "stock": 100,
+    "sku": "TSH-001",
+    "barcode": "1234567890123",
+    "status": "active",
+    "variants": "S,M,L,XL"
+  },
+
+  "product_bulk_upload_future": {
+    "storeId": 1,
+    "products": [
+      {
+        "name": "Product A",
+        "price": "10.00",
+        "stock": 50,
+        "sku": "A-001"
+      },
+      {
+        "name": "Product B",
+        "price": "20.00",
+        "stock": 30,
+        "sku": "B-001"
+      }
+    ]
+  }
+}

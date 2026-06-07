@@ -1,0 +1,149 @@
+{
+  "info": {
+    "name": "StoreVerse API",
+    "description": "Test collection for StoreVerse backend (port 5000). Import this file in Postman: File → Import.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "userId", "value": "1" },
+    { "key": "storeId", "value": "1" },
+    { "key": "email", "value": "test@example.com" },
+    { "key": "verifyToken", "value": "paste-token-from-email-link" },
+    { "key": "otp", "value": "123456" }
+  ],
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Register (send verification email)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/user/register"
+          }
+        },
+        {
+          "name": "Verify email (GET – use token from email)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/user/verify-email?token={{verifyToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "verify-email"],
+              "query": [{ "key": "token", "value": "{{verifyToken}}" }]
+            }
+          }
+        },
+        {
+          "name": "Complete registration",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"name\": \"Jane Doe\",\n  \"password\": \"SecurePass123!\",\n  \"phoneNumber\": \"+15551234567\"\n}"
+            },
+            "url": "{{baseUrl}}/api/user/complete-registration"
+          }
+        },
+        {
+          "name": "Login (sends OTP to email)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/user/login"
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp\": \"{{otp}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/user/verify-otp"
+          }
+        },
+        {
+          "name": "Fetch user by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/user/fetchUser/{{userId}}"
+          }
+        },
+        {
+          "name": "Update user profile",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Updated\",\n  \"phoneNumber\": \"+15559876543\"\n}"
+            },
+            "url": "{{baseUrl}}/api/user/update/{{userId}}"
+          }
+        },
+        {
+          "name": "Change password",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NewSecurePass456!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/user/change-password/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Store",
+      "item": [
+        {
+          "name": "Add store",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"image\": \"https://example.com/store-logo.png\",\n  \"storeName\": \"My Test Store\",\n  \"category\": \"Fashion\",\n  \"businessAddress\": \"123 Main St, Lagos\",\n  \"country\": \"Nigeria\",\n  \"currency\": \"NGN\",\n  \"subDomain\": \"my-test-store\"\n}"
+            },
+            "url": "{{baseUrl}}/api/store/add-store"
+          }
+        },
+        {
+          "name": "Get store by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/store/getsore/{{storeId}}"
+          }
+        },
+        {
+          "name": "Update store",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"storeName\": \"My Updated Store\",\n  \"category\": \"Electronics\",\n  \"businessAddress\": \"456 Commerce Ave\",\n  \"country\": \"Nigeria\",\n  \"currency\": \"NGN\",\n  \"subDomain\": \"my-updated-store\",\n  \"isActive\": true,\n  \"sslEnabled\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/store/UpdateSore/{{storeId}}"
+          }
+        }
+      ]
+    }
+  ]
+}

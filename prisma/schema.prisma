@@ -1,0 +1,362 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  name              String?
+  email             String    @unique
+  password          String?
+  phoneNumber       String?   @unique
+  emailVerified     Boolean   @default(false)
+  emailVerifyCode   String?
+  emailVerifyExpiry DateTime?
+  loginOtpCode      String?
+  loginOtpExpiry    DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  stores            Store[]
+}
+
+model Store {
+  id              Int              @id @default(autoincrement())
+  userId          Int
+  image           String?
+  storeName       String?        @unique
+  category        String?
+  businessAddress String?
+  country         String?
+  currency        String?
+  contactEmail    String?         
+  phoneNumber     String?
+  timeZone        String?
+  subDomain       String?           @unique
+  isActive        Boolean          @default(true)
+  sslEnabled      Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  user            User             @relation(fields: [userId], references: [id])
+  staffs          Staff[]
+  storeAnalytics  StoreAnalytics[]
+  regions         Region[]
+  products        Product[]
+  warehouses      Warehouse[]
+  inventories     Inventory[]
+  customers       Customer[]
+  campaigns       Campaign[]
+  orders          Order[]
+  shipments       Shipment[]
+  customize       Customize[]
+}
+
+model Staff {
+  id      Int @id @default(autoincrement())
+  storeId Int
+
+  name   String?
+  email  String  @unique
+  status String?
+  role   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model StoreAnalytics {
+  id      Int @id @default(autoincrement())
+  storeId Int
+
+  totalSales     Int @default(0)
+  orders         Int @default(0)
+  visitors       Int @default(0)
+  activeProducts Int @default(0)
+
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model Region {
+  id      Int @id @default(autoincrement())
+  storeId Int
+
+  country      String?
+  code         String?
+  taxRate      String?
+  shippingZone String?
+  status       String?
+
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model Product {
+  id      Int @id @default(autoincrement())
+  storeId Int
+
+  image       String?
+  name        String?
+  description String?
+  category    String?
+
+  price String?
+  stock Int?
+
+  sku      String?
+  barcode  String?
+  status   String?
+  variants String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+
+  inventory  Inventory[]
+  orderItems OrderItem[]
+}
+
+model Warehouse {
+  id      Int @id @default(autoincrement())
+  storeId Int
+
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+
+  inventory Inventory[]
+}
+
+model Inventory {
+  id Int @id @default(autoincrement())
+
+  storeId     Int
+  productId   Int
+  warehouseId Int
+
+  quantity Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store     Store     @relation(fields: [storeId], references: [id])
+  product   Product   @relation(fields: [productId], references: [id])
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+
+  @@unique([productId, warehouseId])
+}
+
+model Customer {
+  customerId Int @id @default(autoincrement())
+
+  storeId Int
+
+  firstName String?
+  lastName  String?
+
+  email String? @unique
+  phone String?
+
+  status  String?
+  address String?
+
+  preferedLanguage String?
+  preferedCurrency String?
+
+  tags  String?
+  notes String?
+
+  orderCount Int?
+  totalSpent Int?
+
+  emailMarketing Boolean @default(false)
+  smsMarketing   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+
+  orders Order[]
+}
+
+model Campaign {
+  id Int @id @default(autoincrement())
+
+  storeId Int
+
+  name            String
+  channel         String
+  customerSegment String
+
+  messageContent String
+
+  schedule    String    @default("send_now")
+  scheduledAt DateTime?
+
+  status String @default("active")
+
+  audience    Int @default(0)
+  sent        Int @default(0)
+  opens       Int @default(0)
+  clicks      Int @default(0)
+  conversions Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+
+  storeId    Int
+  customerId Int?
+
+  orderNumber String
+
+  customerName  String?
+  customerEmail String?
+  customerPhone String?
+
+  status        String @default("pending")
+  paymentStatus String @default("pending")
+
+  paymentMethod String?
+  transactionId String?
+
+  subtotal    String @default("0")
+  tax         String @default("0")
+  shippingFee String @default("0")
+  total       String @default("0")
+
+  itemCount Int @default(0)
+
+  shippingRecipient String?
+  shippingStreet    String?
+  shippingCity      String?
+  shippingState     String?
+  shippingPostal    String?
+  shippingCountry   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store    Store     @relation(fields: [storeId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [customerId])
+
+  items        OrderItem[]
+  statusEvents OrderStatusEvent[]
+  shipments    Shipment[]
+  refunds      OrderRefund[]
+}
+
+model OrderItem {
+  id Int @id @default(autoincrement())
+
+  orderId   Int
+  productId Int?
+
+  productName       String
+  variantAttributes String?
+
+  quantity Int @default(1)
+
+  unitPrice String
+  lineTotal String
+
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id])
+}
+
+model OrderStatusEvent {
+  id Int @id @default(autoincrement())
+
+  orderId Int
+
+  statusLabel String
+  description String?
+
+  completed Boolean @default(false)
+
+  occurredAt DateTime?
+  expectedAt DateTime?
+
+  sortOrder Int @default(0)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Shipment {
+  id Int @id @default(autoincrement())
+
+  storeId Int
+  orderId Int
+
+  courier     String?
+  trackingId  String?
+  destination String?
+
+  estimatedDelivery DateTime?
+
+  status    String  @default("pending")
+  isOnTrack Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  trackingEvents ShipmentTrackingEvent[]
+}
+
+model ShipmentTrackingEvent {
+  id Int @id @default(autoincrement())
+
+  shipmentId Int
+
+  title       String
+  description String?
+  location    String?
+
+  eventStatus String @default("pending")
+
+  occurredAt DateTime?
+  sortOrder  Int       @default(0)
+
+  shipment Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+}
+
+model OrderRefund {
+  id Int @id @default(autoincrement())
+
+  orderId Int
+
+  amount String
+  reason String
+
+  processedAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Customize {
+  id           Int      @id @default(autoincrement())
+  storeId      Int
+  primaryColor String?
+  fontFamily   String?
+  storeLogoUrl String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+}
