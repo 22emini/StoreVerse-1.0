@@ -1,13 +1,13 @@
 import { prisma } from "../../lib/prisma";
 import { Request, Response } from "express";
 
-/** Turn a URL param or body value into a number, or null if invalid */
+
 const parseId = (value: unknown): number | null => {
   const id = Number(value);
   return Number.isNaN(id) ? null : id;
 };
 
-/** Turn stock from the request into a number, or leave it unset */
+
 const parseStock = (value: unknown): number | undefined => {
   if (value === undefined || value === null || value === "") {
     return undefined;
@@ -79,7 +79,7 @@ export const getProductsByStore = async (req: Request, res: Response) => {
     }
 
     const products = await prisma.product.findMany({ where: { storeId } });
-
+  
     return res.status(200).json({
       count: products.length,
       products,

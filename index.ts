@@ -4,6 +4,7 @@ import userRoutes from './routes/userRoute';
 import storeRoute from "./routes/storeRoute";
 import productRoute from "./routes/productRoute";
 import inventoryRoute from "./routes/inventoryRoute";
+import customerRoute from './routes/CustomerRoute';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -41,6 +42,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction): any => {
   app.use('/api/store', storeRoute);
   app.use('/api/product', productRoute);
   app.use('/api/inventory', inventoryRoute);
+  app.use('/api/customer', customerRoute);
+
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });

@@ -106,7 +106,10 @@ export const getInventoryByStore = async (req:Request, res:Response) => {
       updatedAt: item.updatedAt,
     }));
 
-    return res.json(items);
+    return res.json({
+      count: items.length,
+      items
+    });
   } catch (error) {
     return res.status(500).json({
       message: 'Failed to fetch inventory',
@@ -122,23 +125,9 @@ export const getInventorySummary = async (req:Request, res:Response)=> {
       where: { storeId },
     });
 
-    const summary = {
-      totalStock: inventory.reduce(
-        (sum, item) => sum + item.quantity,
-        0
-      ),
-      inStock: inventory.filter(
-        (item) => item.quantity > 10
-      ).length,
-      lowStock: inventory.filter(
-        (item) => item.quantity > 0 && item.quantity <= 10
-      ).length,
-      outOfStock: inventory.filter(
-        (item) => item.quantity === 0
-      ).length,
-    };
+  
 
-    return res.json(summary);
+
   } catch (error) {
     return res.status(500).json({
       message: 'Failed to get summary',

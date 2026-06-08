@@ -1,6 +1,8 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider            = "prisma-client"
+  output              = "../generated/prisma"
+  moduleFormat        = "cjs"
+  importFileExtension = "ts"
 }
 
 datasource db {
@@ -27,15 +29,15 @@ model Store {
   id              Int              @id @default(autoincrement())
   userId          Int
   image           String?
-  storeName       String?        @unique
+  storeName       String?          @unique
   category        String?
   businessAddress String?
   country         String?
   currency        String?
-  contactEmail    String?         
+  contactEmail    String?
   phoneNumber     String?
   timeZone        String?
-  subDomain       String?           @unique
+  subDomain       String?          @unique
   isActive        Boolean          @default(true)
   sslEnabled      Boolean          @default(false)
   createdAt       DateTime         @default(now())
@@ -48,6 +50,7 @@ model Store {
   warehouses      Warehouse[]
   inventories     Inventory[]
   customers       Customer[]
+  segments        Segment[]
   campaigns       Campaign[]
   orders          Order[]
   shipments       Shipment[]
@@ -357,6 +360,19 @@ model Customize {
   storeLogoUrl String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model Segment {
+  id          Int      @id @default(autoincrement())
+  storeId     Int
+  name        String
+  description String?
+  conditions  String?
+  type        String   @default("custom")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   store Store @relation(fields: [storeId], references: [id])
 }
