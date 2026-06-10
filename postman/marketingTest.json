@@ -1,0 +1,19 @@
+{
+  "createCampaign": {
+    "storeId": 1,
+    "name": "Summer Launch Campaign",
+    "channel": "email",
+    "customerSegment": "all_customers",
+    "messageContent": "Celebrate summer with 20% off all items. Use code SUMMER20 at checkout!",
+    "schedule": "send_now"
+  },
+  "scheduleCampaign": {
+    "storeId": 1,
+    "name": "Weekend SMS Promo",
+    "channel": "sms",
+    "customerSegment": "loyal_customers",
+    "messageContent": "Flash weekend sale: Save 15% storewide through Sunday.",
+    "schedule": "scheduled",
+    "scheduledAt": "2026-06-15T09:00:00.000Z"
+  }
+}
