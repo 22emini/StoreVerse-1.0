@@ -6,6 +6,8 @@ import productRoute from "./routes/productRoute";
 import inventoryRoute from "./routes/inventoryRoute";
 import customerRoute from './routes/CustomerRoute';
 import marketing from './routes/marketing';
+import orderRoutes from './routes/orderController';
+import teamRoute from './routes/teamRoute';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -31,6 +33,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction): any => {
   app.use('/api/inventory', inventoryRoute);
   app.use('/api/customer', customerRoute);
   app.use('/api/campaign', marketing);
+  app.use('/api/orders', orderRoutes);
+  app.use('/api/team', teamRoute);
 
   async function start(){
   try{

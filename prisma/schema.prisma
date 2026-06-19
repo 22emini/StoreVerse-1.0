@@ -55,6 +55,7 @@ model Store {
   orders          Order[]
   shipments       Shipment[]
   customize       Customize[]
+  teams           team[]  
 }
 
 model Staff {
@@ -373,6 +374,23 @@ model Segment {
   type        String   @default("custom")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model team {
+  id      Int    @id @default(autoincrement())
+  storeId Int
+
+  name         String?
+  email        String   @unique
+  role         String?
+  status       String?  @default("invited")
+  inviteToken  String?  @unique
+  inviteExpiry DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   store Store @relation(fields: [storeId], references: [id])
 }

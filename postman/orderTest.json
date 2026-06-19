@@ -1,0 +1,245 @@
+{
+  "_notes": {
+    "baseUrl": "http://localhost:5000/api/orders",
+    "order": [
+      "1. Ensure a store exists — note storeId",
+      "2. POST / — createOrder (guest or linked customer) — note returned order id + orderNumber",
+      "3. PATCH /status/:orderId — advance: pending → paid → shipped → delivered",
+      "4. When shipping, supply courier + trackingId + estimatedDelivery (a shipment record is auto-created)",
+      "5. GET /order/:orderId or /order/ORD-001 — inspect lineItems, timeline, shipment",
+      "6. POST /receipt/:orderId — sends email receipt to customerEmail",
+      "7. POST /refund/:orderId — only allowed on paid / shipped / delivered orders",
+      "8. GET /shipments/:storeId — list shipments; PATCH /shipment/status/:shipmentId — update tracking",
+      "9. GET /track/:trackingId — public customer-facing tracking"
+    ],
+    "replaceIds": "Replace storeId, orderId, shipmentId, and trackingId with real values from your DB responses."
+  },
+
+  "createOrder_guest_paid": {
+    "_endpoint": "POST /api/orders",
+    "storeId": 1,
+    "customerName": "Amara Okafor",
+    "customerEmail": "amara.okafor@example.com",
+    "customerPhone": "+2348012345678",
+    "paymentMethod": "card",
+    "transactionId": "TXN-20260615-001",
+    "paymentStatus": "paid",
+    "status": "paid",
+    "tax": "500",
+    "shippingFee": "300",
+    "shipping": {
+      "recipient": "Amara Okafor",
+      "street": "12 Marina Road",
+      "city": "Lagos",
+      "state": "Lagos",
+      "postal": "100001",
+      "country": "Nigeria"
+    },
+    "items": [
+      {
+        "productName": "Wireless Earbuds Pro",
+        "productId": 5,
+        "unitPrice": "7500",
+        "quantity": "2",
+        "variantAttributes": { "color": "black", "size": "one-size" }
+      },
+      {
+        "productName": "Phone Case (Clear)",
+        "unitPrice": "1500",
+        "quantity": "1"
+      }
+    ]
+  },
+
+  "createOrder_guest_pending": {
+    "_endpoint": "POST /api/orders",
+    "storeId": 1,
+    "customerName": "David Mensah",
+    "customerEmail": "david.mensah@example.com",
+    "customerPhone": "+2337012345678",
+    "tax": "0",
+    "shippingFee": "200",
+    "shipping": {
+      "street": "45 Independence Ave",
+      "city": "Accra",
+      "state": "Greater Accra",
+      "postal": "00233",
+      "country": "Ghana"
+    },
+    "items": [
+      {
+        "productName": "Laptop Stand",
+        "unitPrice": "12000",
+        "quantity": "1"
+      }
+    ]
+  },
+
+  "createOrder_linkedCustomer": {
+    "_endpoint": "POST /api/orders — customerId resolves name/email/phone from DB",
+    "storeId": 1,
+    "customerId": 3,
+    "paymentMethod": "transfer",
+    "transactionId": "TXN-20260615-002",
+    "tax": "250",
+    "shippingFee": "150",
+    "items": [
+      {
+        "productName": "Silk Evening Dress",
+        "productId": 1,
+        "unitPrice": "18999",
+        "quantity": "1",
+        "variantAttributes": { "size": "M", "color": "Ivory" }
+      },
+      {
+        "productName": "Cashmere Scarf",
+        "productId": 3,
+        "unitPrice": "4500",
+        "quantity": "2",
+        "variantAttributes": { "color": "Navy" }
+      }
+    ]
+  },
+
+  "updateStatus_pendingToPaid": {
+    "_endpoint": "PATCH /api/orders/status/:orderId",
+    "status": "paid"
+  },
+
+  "updateStatus_paidToShipped": {
+    "_endpoint": "PATCH /api/orders/status/:orderId — creates shipment + seeds tracking milestones",
+    "status": "shipped",
+    "courier": "DHL",
+    "trackingId": "TRK-20260615-DHL",
+    "estimatedDelivery": "2026-06-22T00:00:00Z"
+  },
+
+  "updateStatus_shippedToDelivered": {
+    "_endpoint": "PATCH /api/orders/status/:orderId — also marks shipment as delivered",
+    "status": "delivered"
+  },
+
+  "updateStatus_byOrderNumber": {
+    "_endpoint": "PATCH /api/orders/status/ORD-001 — accepts orderNumber string instead of numeric id",
+    "status": "paid"
+  },
+
+  "processRefund_full": {
+    "_endpoint": "POST /api/orders/refund/:orderId — no 'amount' = full order total",
+    "reason": "Customer requested return — product damaged on arrival."
+  },
+
+  "processRefund_partial": {
+    "_endpoint": "POST /api/orders/refund/:orderId",
+    "reason": "Partial refund — one item was missing from the package.",
+    "amount": 1500
+  },
+
+  "updateShipmentStatus_inTransit": {
+    "_endpoint": "PATCH /api/orders/shipment/status/:shipmentId",
+    "status": "in_transit"
+  },
+
+  "updateShipmentStatus_delivered": {
+    "_endpoint": "PATCH /api/orders/shipment/status/:shipmentId — also marks linked order as delivered",
+    "status": "delivered"
+  },
+
+  "updateShipmentStatus_delayed": {
+    "_endpoint": "PATCH /api/orders/shipment/status/:shipmentId",
+    "status": "delayed",
+    "isOnTrack": false
+  },
+
+  "sendReceipt": {
+    "_endpoint": "POST /api/orders/receipt/:orderId — no body required, sends to order.customerEmail",
+    "_note": "Order must have a customerEmail set, otherwise returns 400."
+  },
+
+  "getRoutes_noBody": {
+    "orderSummary":         "GET /api/orders/summary/:storeId",
+    "listOrders":           "GET /api/orders/:storeId",
+    "listOrders_pending":   "GET /api/orders/:storeId?status=pending",
+    "listOrders_paid":      "GET /api/orders/:storeId?status=paid",
+    "listOrders_shipped":   "GET /api/orders/:storeId?status=shipped",
+    "listOrders_delivered": "GET /api/orders/:storeId?status=delivered",
+    "listOrders_search":    "GET /api/orders/:storeId?search=Amara",
+    "getOrderById":         "GET /api/orders/order/:orderId",
+    "getOrderByNumber":     "GET /api/orders/order/ORD-001",
+    "shipmentSummary":      "GET /api/orders/shipments/summary/:storeId",
+    "listShipments":        "GET /api/orders/shipments/:storeId",
+    "listShipments_transit":"GET /api/orders/shipments/:storeId?status=in_transit",
+    "listShipments_delayed":"GET /api/orders/shipments/:storeId?status=delayed",
+    "listShipments_search": "GET /api/orders/shipments/:storeId?search=DHL",
+    "trackByTrackingId":    "GET /api/orders/track/TRK-20260615-DHL",
+    "trackByShipmentId":    "GET /api/orders/shipment/track/:shipmentId"
+  },
+
+  "errorCases": {
+    "createOrder_noItems": {
+      "_endpoint": "POST /api/orders — expects 400",
+      "storeId": 1,
+      "customerName": "Test User",
+      "items": []
+    },
+    "createOrder_badStoreId": {
+      "_endpoint": "POST /api/orders — expects 400",
+      "storeId": "xyz",
+      "customerName": "Test",
+      "items": [{ "productName": "Item", "unitPrice": "100", "quantity": "1" }]
+    },
+    "updateStatus_invalidTransition": {
+      "_endpoint": "PATCH /api/orders/status/:orderId — expects 400 (e.g. delivered → pending)",
+      "status": "pending"
+    },
+    "updateStatus_unknownValue": {
+      "_endpoint": "PATCH /api/orders/status/:orderId — expects 400",
+      "status": "cancelled"
+    },
+    "refund_noReason": {
+      "_endpoint": "POST /api/orders/refund/:orderId — expects 400",
+      "amount": 500
+    },
+    "refund_amountExceedsTotal": {
+      "_endpoint": "POST /api/orders/refund/:orderId — expects 400",
+      "reason": "Over-refund test",
+      "amount": 9999999
+    },
+    "refund_alreadyRefunded": {
+      "_endpoint": "POST /api/orders/refund/:orderId — expects 400 (order already refunded)",
+      "reason": "Duplicate refund attempt"
+    },
+    "shipmentStatus_invalidValue": {
+      "_endpoint": "PATCH /api/orders/shipment/status/:shipmentId — expects 400",
+      "status": "lost"
+    }
+  },
+
+  "curlExamples": {
+    "createOrder":          "curl -X POST http://localhost:5000/api/orders -H \"Content-Type: application/json\" -d \"{\\\"storeId\\\":1,\\\"customerName\\\":\\\"Amara Okafor\\\",\\\"customerEmail\\\":\\\"amara@example.com\\\",\\\"tax\\\":\\\"500\\\",\\\"shippingFee\\\":\\\"300\\\",\\\"items\\\":[{\\\"productName\\\":\\\"Earbuds\\\",\\\"unitPrice\\\":\\\"7500\\\",\\\"quantity\\\":\\\"1\\\"}]}\"",
+    "updateStatusShipped":  "curl -X PATCH http://localhost:5000/api/orders/status/1 -H \"Content-Type: application/json\" -d \"{\\\"status\\\":\\\"shipped\\\",\\\"courier\\\":\\\"DHL\\\",\\\"trackingId\\\":\\\"TRK-20260615-DHL\\\",\\\"estimatedDelivery\\\":\\\"2026-06-22T00:00:00Z\\\"}\"",
+    "getOrderSummary":      "curl http://localhost:5000/api/orders/summary/1",
+    "listOrders":           "curl http://localhost:5000/api/orders/1",
+    "getOrderById":         "curl http://localhost:5000/api/orders/order/1",
+    "getOrderByNumber":     "curl http://localhost:5000/api/orders/order/ORD-001",
+    "processRefund":        "curl -X POST http://localhost:5000/api/orders/refund/1 -H \"Content-Type: application/json\" -d \"{\\\"reason\\\":\\\"Product damaged on arrival.\\\"}\"",
+    "sendReceipt":          "curl -X POST http://localhost:5000/api/orders/receipt/1",
+    "getShipmentSummary":   "curl http://localhost:5000/api/orders/shipments/summary/1",
+    "listShipments":        "curl http://localhost:5000/api/orders/shipments/1",
+    "updateShipmentStatus": "curl -X PATCH http://localhost:5000/api/orders/shipment/status/1 -H \"Content-Type: application/json\" -d \"{\\\"status\\\":\\\"delivered\\\"}\"",
+    "trackByTrackingId":    "curl http://localhost:5000/api/orders/track/TRK-20260615-DHL",
+    "trackByShipmentId":    "curl http://localhost:5000/api/orders/shipment/track/1"
+  },
+
+  "validStatusValues": {
+    "order":    ["pending", "paid", "shipped", "delivered", "refunded"],
+    "shipment": ["pending", "in_transit", "delivered", "delayed"],
+    "allowedTransitions": {
+      "pending":   ["paid", "refunded"],
+      "paid":      ["shipped", "refunded"],
+      "shipped":   ["delivered", "refunded"],
+      "delivered": ["refunded"],
+      "refunded":  []
+    }
+  }
+}
