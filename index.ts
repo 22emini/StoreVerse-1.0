@@ -67,4 +67,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction): any => {
    console.error('Uncaught Exception:', err);
  });
 
- start();
+ if (process.env.VERCEL !== '1') {
+   start();
+ }
+
+ export default app;

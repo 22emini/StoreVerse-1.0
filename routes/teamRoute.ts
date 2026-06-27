@@ -4,7 +4,7 @@ import {
   acceptInvite,
   getTeamMembers,
   removeTeamMember,
-} from "../controller/team/TeamController";
+} from "../controller/store/team/TeamController";
 
 const teamRoute = Router();
 

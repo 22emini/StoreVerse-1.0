@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import crypto from "crypto";
-import { prisma } from "../../lib/prisma";
-import { sendEmail } from "../../lib/mailer";
+import { prisma } from "../../../lib/prisma";
+import { sendEmail } from "../../../lib/mailer";
 
 const parseId = (value: unknown): number | null => {
   const id = Number(value);
