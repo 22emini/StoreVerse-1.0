@@ -27,7 +27,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction): any => {
     next(err);
   });
   
-  app.use('/',(req:Request , res:Response)=>{
+  app.get('/',(req:Request , res:Response)=>{
     res.status(200).json({
         message: "welcome to the storeVerse API made by Eminioluwa"
     })
