@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { prisma } from '../../lib/prisma';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { sendEmail } from '../../lib/mailer';
 
 // Login with password then generate OTP

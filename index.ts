@@ -9,12 +9,14 @@ import marketing from './routes/marketing';
 import orderRoutes from './routes/orderController';
 import teamRoute from './routes/teamRoute';
 import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config();
 
 // Connect and verify database
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.use(cors());
 app.use(express.json()); 
 app.use((err: any, req: Request, res: Response, next: NextFunction): any => {
     if (err instanceof SyntaxError && 'status' in err && err.status === 400 && 'body' in err) {

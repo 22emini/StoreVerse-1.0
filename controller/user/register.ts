@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../../lib/prisma';
 import crypto from "crypto";
 import { sendEmail } from '../../lib/mailer';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 export const register = async (req:Request, res:Response) => {
     const { email } = req.body;
   
