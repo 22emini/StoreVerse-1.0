@@ -5,7 +5,7 @@ import { sendEmail } from '../../lib/mailer';
 // GET /store/:storeId/summary
 export const getOrderSummary = async (req: Request, res: Response) => {
   try {
-    const storeId = parseInt(req.params.storeId);
+    const storeId = parseInt(req.params.storeId as string);
     if (isNaN(storeId)) {
       return res.status(400).json({ message: 'Valid storeId is required' });
     }
@@ -47,7 +47,7 @@ export const getOrderSummary = async (req: Request, res: Response) => {
 // GET /store/:storeId
 export const getOrders = async (req: Request, res: Response) => {
   try {
-    const storeId = parseInt(req.params.storeId);
+    const storeId = parseInt(req.params.storeId as string);
     if (isNaN(storeId)) {
       return res.status(400).json({ message: 'Valid storeId is required' });
     }
@@ -99,7 +99,7 @@ export const getOrders = async (req: Request, res: Response) => {
 // GET /:orderId
 export const getOrderById = async (req: Request, res: Response) => {
   try {
-    const param = req.params.orderId;
+    const param = req.params.orderId as string;
 
     // Try to find by numeric id first, otherwise by order number
     let order = null;
@@ -331,7 +331,7 @@ export const createOrder = async (req: Request, res: Response) => {
 // PATCH /:orderId/status
 export const updateOrderStatus = async (req: Request, res: Response) => {
   try {
-    const param = req.params.orderId;
+    const param = req.params.orderId as string;
     let order = null;
     const numericId = parseInt(param);
     if (!isNaN(numericId)) {
@@ -473,7 +473,7 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
 // POST /:orderId/refund
 export const processRefund = async (req: Request, res: Response) => {
   try {
-    const param = req.params.orderId;
+    const param = req.params.orderId as string;
     let order = null;
     const numericId = parseInt(param);
     if (!isNaN(numericId)) {
@@ -539,7 +539,7 @@ export const processRefund = async (req: Request, res: Response) => {
 // POST /:orderId/receipt
 export const sendReceipt = async (req: Request, res: Response) => {
   try {
-    const param = req.params.orderId;
+    const param = req.params.orderId as string;
     let order = null;
     const numericId = parseInt(param);
     if (!isNaN(numericId)) {
@@ -580,7 +580,7 @@ export const sendReceipt = async (req: Request, res: Response) => {
 // GET /store/:storeId/shipments/summary
 export const getShipmentSummary = async (req: Request, res: Response) => {
   try {
-    const storeId = parseInt(req.params.storeId);
+    const storeId = parseInt(req.params.storeId as string);
     if (isNaN(storeId)) {
       return res.status(400).json({ message: 'Valid storeId is required' });
     }
@@ -611,7 +611,7 @@ export const getShipmentSummary = async (req: Request, res: Response) => {
 // GET /store/:storeId/shipments
 export const getShipments = async (req: Request, res: Response) => {
   try {
-    const storeId = parseInt(req.params.storeId);
+    const storeId = parseInt(req.params.storeId as string);
     if (isNaN(storeId)) {
       return res.status(400).json({ message: 'Valid storeId is required' });
     }
@@ -669,7 +669,7 @@ export const getShipments = async (req: Request, res: Response) => {
 // PATCH /shipment/:shipmentId/status
 export const updateShipmentStatus = async (req: Request, res: Response) => {
   try {
-    const shipmentId = parseInt(req.params.shipmentId);
+    const shipmentId = parseInt(req.params.shipmentId as string);
     if (isNaN(shipmentId)) {
       return res.status(400).json({ message: 'Valid shipmentId is required' });
     }
@@ -711,7 +711,7 @@ export const updateShipmentStatus = async (req: Request, res: Response) => {
 // GET /track/:trackingId
 export const trackByTrackingId = async (req: Request, res: Response) => {
   try {
-    const trackingId = req.params.trackingId ? req.params.trackingId.trim() : '';
+    const trackingId = req.params.trackingId ? (req.params.trackingId as string).trim() : '';
     if (!trackingId) {
       return res.status(400).json({ message: 'trackingId is required' });
     }
@@ -771,7 +771,7 @@ export const trackByTrackingId = async (req: Request, res: Response) => {
 // GET /shipment/:shipmentId/track
 export const trackShipment = async (req: Request, res: Response) => {
   try {
-    const shipmentId = parseInt(req.params.shipmentId);
+    const shipmentId = parseInt(req.params.shipmentId as string);
     if (isNaN(shipmentId)) {
       return res.status(400).json({ message: 'Valid shipmentId is required' });
     }
