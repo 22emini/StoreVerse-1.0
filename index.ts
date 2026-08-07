@@ -49,7 +49,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction): any => {
     console.log("✅ Database connected successfully");
     
     const server = app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      console.log(`Server is running on :   http://localhost:${PORT}`);
     });
 
     server.on('close', () => {

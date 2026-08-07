@@ -1,9 +1,9 @@
 import  express from 'express';
 import { register, verifyEmail, completeRegistration } from '../controller/user/register';
 import { login } from '../controller/user/login';
-import { fetchUser } from '../controller/user/fetchUser';
+import { fetchUser,getAllUser } from '../controller/user/fetchUser';
 import { Update } from '../controller/user/UpadateInfo';
-import { changePassword } from '../controller/user/Change';
+import { changePassword, ForgotPassword, resetPassword } from '../controller/user/Change';
 import { verifyOtp } from '../controller/user/verifyOtp';
 
 const router = express.Router();
@@ -17,5 +17,7 @@ router.get('/fetchUser/:id', fetchUser);
 router.put('/update/:id', Update);
 router.put('/change-password/:id', changePassword);
 router.post('/verify-otp', verifyOtp);
-
+router.get('/getAll', getAllUser);
+router.post('/forgot-password', ForgotPassword);
+router.post('/reset-password', resetPassword);
 export default router;
