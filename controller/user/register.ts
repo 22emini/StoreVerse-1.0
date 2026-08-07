@@ -92,6 +92,17 @@ export const register = async (req:Request, res:Response) => {
         message: "User not found",
       });
     }
+
+    // Check if phone number is already taken by another user
+    const existingPhone = await prisma.user.findUnique({
+      where: { phoneNumber },
+    });
+
+    if (existingPhone && existingPhone.id !== user.id) {
+      return res.status(400).json({
+        message: "Phone number already in use",
+      });
+    }
   
     const hashedPassword =
       await bcrypt.hash(password, 10);

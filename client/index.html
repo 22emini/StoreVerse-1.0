@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sign in to StoreVerse — your all-in-one e-commerce management platform.">
+  <title>Sign In — StoreVerse</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-container">
+      <div class="auth-brand">
+        <div class="brand-mark">S</div>
+        <h1>StoreVerse</h1>
+        <p>Your e-commerce management platform</p>
+      </div>
+
+      <div class="auth-card">
+        <h2>Welcome back</h2>
+        <p class="auth-subtitle">Sign in to your account to continue</p>
+
+        <div id="auth-msg" class="auth-message hidden"></div>
+
+        <form id="login-form" autocomplete="on">
+          <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+            <input class="input" type="email" id="email" name="email" placeholder="you@example.com" required autofocus>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="password-wrapper">
+              <input class="input" type="password" id="password" name="password" placeholder="Enter your password" required>
+              <button type="button" class="password-toggle">👁️</button>
+            </div>
+          </div>
+          <div style="text-align:right; margin-bottom:var(--space-4);">
+            <a href="forgot-password.html" style="font-size:13px;">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+      </div>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="register.html">Create one</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // If already logged in, go to dashboard
+    if (AppStore.getUser()) {
+      window.location.href = 'dashboard.html';
+    }
+    Auth.initLogin();
+    Auth.initPasswordToggles();
+  </script>
+</body>
+</html>

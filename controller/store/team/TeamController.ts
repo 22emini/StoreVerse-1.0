@@ -50,7 +50,7 @@ export const inviteMember = async (req: Request, res: Response) => {
     });
 
     // Build invitation link (frontend will handle the accept page)
-    const inviteLink = `${process.env.FRONTEND_URL ?? "http://localhost:3000"}/accept-invite?token=${inviteToken}`;
+    const inviteLink = `${process.env.FRONTEND_URL ?? "http://localhost:5000"}/accept-invite?token=${inviteToken}`;
 
     await sendEmail(
       email,

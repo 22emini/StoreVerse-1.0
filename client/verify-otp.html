@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Verify your OTP to log in to StoreVerse.">
+  <title>Verify OTP — StoreVerse</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-container">
+      <div class="auth-brand">
+        <div class="brand-mark">S</div>
+        <h1>StoreVerse</h1>
+      </div>
+
+      <div class="auth-card" style="text-align:center;">
+        <h2>Check your email</h2>
+        <p class="auth-subtitle">We sent a 6-digit code to your email. Enter it below.</p>
+
+        <div id="auth-msg" class="auth-message hidden"></div>
+
+        <form id="otp-form">
+          <div class="otp-inputs">
+            <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" autofocus>
+            <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+          </div>
+          <button type="submit" class="btn btn-primary">Verify</button>
+        </form>
+
+        <p style="margin-top:var(--space-6); font-size:13px; color:var(--color-text-secondary);">
+          Didn't receive the code? Check your spam folder or <a href="index.html">try again</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    Auth.initOTP();
+  </script>
+</body>
+</html>
