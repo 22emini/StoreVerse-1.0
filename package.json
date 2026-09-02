@@ -4,6 +4,8 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon --exec tsx index.ts",
+    "dev:client": "npm run dev --prefix client",
+    "build:client": "npm run build --prefix client",
     "start": "tsx index.ts",
     "build": "prisma generate"
   },
